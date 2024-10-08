@@ -10,6 +10,7 @@ const jwksUrl =
 export async function handler(event) {
     try {
         const jwtToken = await verifyToken(event.authorizationToken)
+        logger.info('verifyToken', jwtToken)
 
         return {
             principalId: jwtToken.sub,
@@ -44,7 +45,7 @@ async function verifyToken(authHeader) {
     const jwt = jsonwebtoken.decode(token, { complete: true })
 
     try {
-        const res = await axios.get(jwksUrl)
+        const res = await Axios.get(jwksUrl)
         const key = res.data.keys.find((k) => k.kid === jwt.header.kid)
 
         if (!key) {
